@@ -15,22 +15,32 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  test:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      # Start the API server
+      - name: Run the API server
+        run: dotnet run --project path/to/your/project/ColetaApi.csproj &
+        # Adicione o comando acima para rodar a API em segundo plano
+
+      # Testa a rota da API usando cURL
+      - name: Test API route
         run: |
+          sleep 10  # Espera o servidor começar
+          curl --location --request GET 'http://localhost:5000/api/coleta'  # Ajuste a URL conforme sua API
           echo Add other actions to build,
           echo test, and deploy your project.
