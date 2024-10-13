@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ColetaApi.Models.ColetaModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Acompanhe o cronograma de coleta.</h1>
+
+<p>
+    <a asp-action="Create">Criar nova coleta</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Código
+            </th>
+            <th>
+                Coleta
+            </th>
+            <th>
+                Tipo de coleta
+            </th>
+            <th>
+                Data da coleta
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pk_id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ds_coleta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ds_tipocoleta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dt_coleta)
+                </td>
+                <td>
+                    @Html.ActionLink("Alterar", "Update", new { id = item.Pk_id }) |
+                    @Html.ActionLink("Deletar", "Delete", new { id = item.Pk_id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    @if (Model.Any())
+    {
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                @if (ViewBag.HasPrevious)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?page=@(ViewBag.PageIndex - 1)&pageSize=@ViewBag.PageSize">Anterior</a>
+                    </li>
+                }
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.PageIndex ? "active" : "")">
+                        <a class="page-link" href="?page=@i&pageSize=@ViewBag.PageSize">@i</a>
+                    </li>
+                }
+                @if (ViewBag.HasNext)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?page=@(ViewBag.PageIndex + 1)&pageSize=@ViewBag.PageSize">Próxima</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
