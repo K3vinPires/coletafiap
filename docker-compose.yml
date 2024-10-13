@@ -1,0 +1,30 @@
+services:
+  oracle-db:
+    image: oracleinanutshell/oracle-xe-11g
+    container_name: oracle_db
+    environment:
+      - ORACLE_DATABASE=XE  # Mude para XE, não cdb1
+      - ORACLE_USER=RM99481
+      - ORACLE_PASSWORD=170298
+      - ORACLE_ALLOW_REMOTE=true
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/u01/app/oracle
+
+  coleta-api:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    container_name: coleta_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DatabaseConnection=Data Source=oracle-db:1521/XE;User ID=RM99481;Password=170298;Pooling=True;Connection Timeout=60;  # Use XE
+    ports:
+      - "5285:8080"  # Redirecionar porta 5285 do host para a porta 8080 do contêiner
+    depends_on:
+      - oracle-db
+
+volumes:
+  oracle_data:
