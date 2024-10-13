@@ -1,0 +1,42 @@
+﻿@model ColetaApi.Models.ColetaModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Deletar</h1>
+<input type="hidden" name="Pk_id" value="123" />
+
+<h3>Tem certeza que deseja deletar este item?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Coleta
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ds_coleta)
+        </dd>
+        <dt class="col-sm-2">
+            Tipo de coleta
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ds_tipocoleta)
+        </dd>
+        <dt class="col-sm-2">
+            Data da coleta
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Dt_coleta)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Pk_id" />
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Excluir" class="btn btn-danger" /> |
+        <a asp-action="Index">Voltar para a Lista</a>
+    </form>
+
+</div><input type="hidden" name="Pk_id" value="123" />
+
