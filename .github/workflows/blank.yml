@@ -1,19 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +17,7 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: Restore dependencies
         run: dotnet restore
@@ -32,15 +25,14 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release
 
-      # Start the API server
       - name: Run the API server
-        run: dotnet run --project path/to/your/project/ColetaApi.csproj &
-        # Adicione o comando acima para rodar a API em segundo plano
+        run: dotnet run --project ColetaApi/ColetaApi.csproj &
 
-      # Testa a rota da API usando cURL
       - name: Test API route
         run: |
           sleep 10  # Espera o servidor começar
-          curl --location --request GET 'http://localhost:5000/api/coleta'  # Ajuste a URL conforme sua API
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          until curl --location --request GET 'http://localhost:5000/api/coleta'; do
+            echo "Aguardando o servidor iniciar..."
+            sleep 5
+          done
+          echo "Servidor iniciado com sucesso!"
