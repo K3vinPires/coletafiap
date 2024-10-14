@@ -31,7 +31,7 @@ jobs:
       - name: Test API route
         run: |
           sleep 10  # Espera o servidor começar
-          until curl --location --request GET 'http://localhost:5000/api/coleta'; do
+          until curl --location --request GET 'http://localhost:5285/api/coleta'; do
             echo "Aguardando o servidor iniciar..."
             sleep 5
           done
