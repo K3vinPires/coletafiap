@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ "dev" ] 
+  pull_request:
+    branches: [ "dev" ] 
+  workflow_dispatch: 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Run the API server
+        run: dotnet run --project ColetaApi/ColetaApi.csproj &
+
+      - name: Test API route
+        run: |
+          sleep 10  # Espera o servidor começar
+          until curl --location --request GET 'http://localhost:5285/api/coleta'; do
+            echo "Aguardando o servidor iniciar..."
+            sleep 5
+          done
+          echo "Servidor iniciado com sucesso!"
